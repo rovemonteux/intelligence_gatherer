@@ -1,2 +1,3 @@
-# intelligence_gatherer
-Intelligence Gatherer
+# Intelligence Gatherer
+
+Automated configurable intelligence gatherer.
