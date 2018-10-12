@@ -28,22 +28,54 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *******************************************************************************/
 
-package cf.monteux.intelligence;
+package cf.monteux.intelligence.properties;
 
-import cf.monteux.intelligence.google.Search;
-import cf.monteux.intelligence.properties.Configuration;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
-public class Main {
+public class Configuration {
 
-	public static void main(String[] args) {
-		System.out.println("Starting up");
-		Configuration configuration = new Configuration();
+	private String customSearch;
+	private String customSearchApiKey;
+	
+	public Configuration() {
+		Properties prop = new Properties();
+		InputStream input = null;
+
 		try {
-			Search.results("Rove Monteux", configuration);
+			input = new FileInputStream("intelligence.properties");
+			prop.load(input);
+			this.setCustomSearch(prop.getProperty("customsearch"));
+			this.setCustomSearchApiKey(prop.getProperty("customsearchapikey"));
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+
 	}
 
+	public String getCustomSearch() {
+		return customSearch;
+	}
+
+	public void setCustomSearch(String customSearch) {
+		this.customSearch = customSearch;
+	}
+
+	public String getCustomSearchApiKey() {
+		return customSearchApiKey;
+	}
+
+	public void setCustomSearchApiKey(String customSearchApiKey) {
+		this.customSearchApiKey = customSearchApiKey;
+	}
 }

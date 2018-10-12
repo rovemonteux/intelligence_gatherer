@@ -28,22 +28,25 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *******************************************************************************/
 
-package cf.monteux.intelligence;
+package cf.monteux.intelligence.network;
 
-import cf.monteux.intelligence.google.Search;
-import cf.monteux.intelligence.properties.Configuration;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
+import java.net.URLConnection;
 
-public class Main {
+import org.apache.commons.io.IOUtils;
 
-	public static void main(String[] args) {
-		System.out.println("Starting up");
-		Configuration configuration = new Configuration();
-		try {
-			Search.results("Rove Monteux", configuration);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+public class Https {
+
+	public static String retrieve(String address) throws IOException {
+		String charset = "UTF-8";
+
+	    URL url = new URL(address);
+	    URLConnection hc = url.openConnection();
+        hc.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
+	    Reader reader = new InputStreamReader(hc.getInputStream(), charset);
+	    return IOUtils.toString(reader);
 	}
-
 }

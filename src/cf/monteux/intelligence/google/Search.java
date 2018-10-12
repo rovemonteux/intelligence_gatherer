@@ -28,22 +28,28 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *******************************************************************************/
 
-package cf.monteux.intelligence;
+package cf.monteux.intelligence.google;
 
-import cf.monteux.intelligence.google.Search;
+import java.io.IOException;
+
+import com.google.gson.Gson;
+
+import cf.monteux.intelligence.network.Https;
 import cf.monteux.intelligence.properties.Configuration;
 
-public class Main {
+public class Search {
 
-	public static void main(String[] args) {
-		System.out.println("Starting up");
-		Configuration configuration = new Configuration();
-		try {
-			Search.results("Rove Monteux", configuration);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+	public static void results(String search, Configuration configuration) throws IOException {
+		String google = "https://www.googleapis.com/customsearch/v1?q="+search.replace(" ", "+")+"&cx="+configuration.getCustomSearch()+"&key="+configuration.getCustomSearchApiKey()+"";
+	    String result = Https.retrieve(google);
+	    GoogleResults results = new Gson().fromJson(result, GoogleResults.class);
+	    System.out.println(result);
+	    System.out.println(results.getResponseData().getResults().get(0).getTitle());
+	    System.out.println(results.getResponseData().getResults().get(0).getUrl());
 	}
-
+	
+	public static void results(String search) throws IOException {
+		results(search, new Configuration());
+	}
+	
 }
