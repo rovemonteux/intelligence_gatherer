@@ -1,6 +1,12 @@
 # Build folder
 target/
 
+# Bin folder
+bin/
+
+# Settings folder
+.settings/
+
 # Compiled class file
 *.class
 
