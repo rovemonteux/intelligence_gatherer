@@ -4,6 +4,10 @@ target/
 # Bin folder
 bin/
 
+# Intellij folder
+.idea/
+intelligence_gatherer.iml
+
 # Settings folder
 .settings/
 
