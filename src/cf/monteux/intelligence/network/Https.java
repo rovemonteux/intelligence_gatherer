@@ -36,9 +36,11 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpClient.Version;
 import java.net.http.HttpRequest;
@@ -60,7 +62,7 @@ public class Https {
                 .version(Version.HTTP_2)
                 .build();
         HttpRequest mainRequest = HttpRequest.newBuilder()
-                .uri(URI.create("address"))
+                .uri(URI.create(address))
                 .setHeader("User-Agent", Agent.get())
                 .build();
         HttpResponse<String> mainResponse = httpClient.send(mainRequest, BodyHandlers.ofString());
@@ -68,16 +70,23 @@ public class Https {
     }
 
     // Java 11
-	public void topResults(String term) throws IOException, InterruptedException {
+	public void topResults(String term) throws IOException, InterruptedException, UnsupportedEncodingException {
 		// Google, Facebook, Instagram, LinkedIn, Bing, DuckDuckGo
         term = term.replace(" ", "%20");
         HttpResponse<String> duckDuckGo = getResponse("https://duckduckgo.com/html?q="+term);
         //  <a rel="nofollow" class="result__a" href="https://www.youtube.com/channel/UCGGMaCGq42mBm5eazzol6Bg"><b>Rove</b> <b>Monteux</b> - YouTube</a>
         duckDuckGo.body().lines()
                 .filter(line -> line.contains("result__a"))
-                .map(line -> line.substring(line.indexOf("href='") + 5, line.indexOf("'>")))
+                .map(line -> line.substring(line.indexOf("uddg=") + 5, line.indexOf("\">")))
                 .forEach(result -> {
-                    addresses.add(result); });
+                    addresses.add(URLDecoder.decode(result,"UTF-8")); });
+
+    }
+
+    public void displayUrls() {
+        for (String url : addresses) {
+            System.out.println("Address: "+url);
+        }
     }
 
     // Java 6
