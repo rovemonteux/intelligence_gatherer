@@ -36,7 +36,6 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
@@ -46,7 +45,7 @@ import java.net.http.HttpClient.Version;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Https {
 
@@ -54,7 +53,20 @@ public class Https {
 
     }
 
-    public ArrayList<String> addresses = new ArrayList<>();
+    public Hashtable<String, Integer> addresses = new Hashtable<String, Integer>();
+    public ArrayList<String> popularUrls = new ArrayList<String>();
+
+    public void topUrls(){
+        ArrayList<Map.Entry<?, Integer>> l = new ArrayList(addresses.entrySet());
+        Collections.sort(l, new Comparator<Map.Entry<?, Integer>>(){
+            public int compare(Map.Entry<?, Integer> o1, Map.Entry<?, Integer> o2) {
+                return o1.getValue().compareTo(o2.getValue());
+            }});
+        for (int i=0; i<l.size(); i++) {
+            System.out.println("Top url: "+l.get(i).getKey());
+            popularUrls.add(l.get(i).getKey().toString());
+        }
+    }
 
     // Java 11
     public HttpResponse<String> getResponse(String address) throws IOException, InterruptedException {
@@ -70,21 +82,43 @@ public class Https {
     }
 
     // Java 11
-	public void topResults(String term) throws IOException, InterruptedException, UnsupportedEncodingException {
+	public void topResults(String term) throws IOException, InterruptedException {
 		// Google, Facebook, Instagram, LinkedIn, Bing, DuckDuckGo
         term = term.replace(" ", "%20");
+
+        // DuckDuckGo
         HttpResponse<String> duckDuckGo = getResponse("https://duckduckgo.com/html?q="+term);
-        //  <a rel="nofollow" class="result__a" href="https://www.youtube.com/channel/UCGGMaCGq42mBm5eazzol6Bg"><b>Rove</b> <b>Monteux</b> - YouTube</a>
         duckDuckGo.body().lines()
                 .filter(line -> line.contains("result__a"))
                 .map(line -> line.substring(line.indexOf("uddg=") + 5, line.indexOf("\">")))
                 .forEach(result -> {
-                    addresses.add(URLDecoder.decode(result,"UTF-8")); });
+                    try {
+                        String finalResult = URLDecoder.decode(result, "UTF-8");
+                        if (!(addresses.contains(finalResult))) {
+                            addresses.put(finalResult, 1);
+                        }
+                        else {
+
+                        }
+                    }
+                    catch (Exception e) { }
+                    });
+
+        //Google
+
+
+        // Bing
+
+        // Facebook
+
+        // Instagram
+
+        // LinkedIn
 
     }
 
     public void displayUrls() {
-        for (String url : addresses) {
+        for (String url : popularUrls) {
             System.out.println("Address: "+url);
         }
     }

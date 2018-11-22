@@ -45,6 +45,7 @@ public class Main {
             Https https = new Https();
             https.topResults("Rove Monteux");
             https.displayUrls();
+            https.topUrls();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
