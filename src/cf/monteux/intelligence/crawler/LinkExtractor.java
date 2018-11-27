@@ -32,13 +32,15 @@ package cf.monteux.intelligence.crawler;
 
 import cf.monteux.intelligence.network.Https;
 
+import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.http.HttpResponse;
 import java.util.Hashtable;
 
 public class LinkExtractor {
 
-    public static void DuckDuckGo(Hashtable<String, Integer> addresses) {
+    /* Extracts a page worth of links of results from DuckDuckGo */
+    public static void DuckDuckGo(Hashtable<String, Integer> addresses, String term) throws IOException, InterruptedException {
         HttpResponse<String> duckDuckGo = Https.getResponse("https://duckduckgo.com/html?q="+term);
         duckDuckGo.body().lines()
                 .filter(line -> line.contains("result__a"))
@@ -46,6 +48,27 @@ public class LinkExtractor {
                 .forEach(result -> {
                     try {
                         String finalResult = URLDecoder.decode(result, "UTF-8");
+                        if (!(addresses.contains(finalResult))) {
+                            addresses.put(finalResult, 1);
+                        }
+                        else {
+
+                        }
+                    }
+                    catch (Exception e) { }
+                });
+    }
+
+    /* Extracts a page worth of links of results from Bing */
+    public static void Bing(Hashtable<String, Integer> addresses, String term) throws IOException, InterruptedException {
+        HttpResponse<String> duckDuckGo = Https.getResponse("https://www.bing.com/search?q="+term);
+        duckDuckGo.body().lines()
+                .filter(line -> line.contains("b_title"))
+                .map(line -> line.substring(line.indexOf("<h2>") + 13, line.indexOf("\">", line.indexOf("<h2>"))))
+                .forEach(result -> {
+                    try {
+                        String finalResult = URLDecoder.decode(result, "UTF-8");
+                        System.out.println("Putting Bing address "+finalResult);
                         if (!(addresses.contains(finalResult))) {
                             addresses.put(finalResult, 1);
                         }

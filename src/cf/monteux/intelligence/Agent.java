@@ -60,8 +60,8 @@ public class Agent {
         // Google, Facebook, Instagram, LinkedIn, Bing, DuckDuckGo
         term = term.replace(" ", "%20");
 
-        // DuckDuckGo
-        LinkExtractor.DuckDuckGo(addresses);
+        LinkExtractor.DuckDuckGo(addresses, term);
+        LinkExtractor.Bing(addresses, term);
 
         //Google
 
