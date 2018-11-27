@@ -39,13 +39,11 @@ import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLDecoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpClient.Version;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
-import java.util.*;
 
 public class Https {
 
@@ -53,23 +51,8 @@ public class Https {
 
     }
 
-    public Hashtable<String, Integer> addresses = new Hashtable<String, Integer>();
-    public ArrayList<String> popularUrls = new ArrayList<String>();
-
-    public void topUrls(){
-        ArrayList<Map.Entry<?, Integer>> l = new ArrayList(addresses.entrySet());
-        Collections.sort(l, new Comparator<Map.Entry<?, Integer>>(){
-            public int compare(Map.Entry<?, Integer> o1, Map.Entry<?, Integer> o2) {
-                return o1.getValue().compareTo(o2.getValue());
-            }});
-        for (int i=0; i<l.size(); i++) {
-            System.out.println("Top url: "+l.get(i).getKey());
-            popularUrls.add(l.get(i).getKey().toString());
-        }
-    }
-
     // Java 11
-    public HttpResponse<String> getResponse(String address) throws IOException, InterruptedException {
+    public static HttpResponse<String> getResponse(String address) throws IOException, InterruptedException {
         HttpClient httpClient = HttpClient.newBuilder()
                 .version(Version.HTTP_2)
                 .build();
@@ -79,48 +62,6 @@ public class Https {
                 .build();
         HttpResponse<String> mainResponse = httpClient.send(mainRequest, BodyHandlers.ofString());
         return mainResponse;
-    }
-
-    // Java 11
-	public void topResults(String term) throws IOException, InterruptedException {
-		// Google, Facebook, Instagram, LinkedIn, Bing, DuckDuckGo
-        term = term.replace(" ", "%20");
-
-        // DuckDuckGo
-        HttpResponse<String> duckDuckGo = getResponse("https://duckduckgo.com/html?q="+term);
-        duckDuckGo.body().lines()
-                .filter(line -> line.contains("result__a"))
-                .map(line -> line.substring(line.indexOf("uddg=") + 5, line.indexOf("\">")))
-                .forEach(result -> {
-                    try {
-                        String finalResult = URLDecoder.decode(result, "UTF-8");
-                        if (!(addresses.contains(finalResult))) {
-                            addresses.put(finalResult, 1);
-                        }
-                        else {
-
-                        }
-                    }
-                    catch (Exception e) { }
-                    });
-
-        //Google
-
-
-        // Bing
-
-        // Facebook
-
-        // Instagram
-
-        // LinkedIn
-
-    }
-
-    public void displayUrls() {
-        for (String url : popularUrls) {
-            System.out.println("Address: "+url);
-        }
     }
 
     // Java 6

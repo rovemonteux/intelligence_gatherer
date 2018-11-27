@@ -30,7 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package cf.monteux.intelligence;
 
-import cf.monteux.intelligence.network.Https;
 import cf.monteux.intelligence.properties.Configuration;
 
 public class Main {
@@ -42,10 +41,10 @@ public class Main {
 			// Java 6
 			//Search.results("Rove Monteux", configuration);
             // Java 11
-            Https https = new Https();
-            https.topResults("Rove Monteux");
-            https.displayUrls();
-            https.topUrls();
+            Agent agent = new Agent();
+            agent.topResults("Rove Monteux");
+            agent.displayUrls();
+            agent.topUrls();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
