@@ -38,9 +38,6 @@ public class Main {
 		System.out.println("Starting up");
 		Configuration configuration = new Configuration();
 		try {
-			// Java 6
-			//Search.results("Rove Monteux", configuration);
-            // Java 11
             Agent agent = new Agent();
             agent.topResults("Rove Monteux");
             agent.displayUrls();

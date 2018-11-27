@@ -56,7 +56,6 @@ public class Agent {
         }
     }
 
-    // Java 11
     public void topResults(String term) throws IOException, InterruptedException {
         // Google, Facebook, Instagram, LinkedIn, Bing, DuckDuckGo
         term = term.replace(" ", "%20");

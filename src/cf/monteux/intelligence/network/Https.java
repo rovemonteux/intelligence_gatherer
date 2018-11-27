@@ -31,14 +31,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package cf.monteux.intelligence.network;
 
 import cf.monteux.intelligence.properties.Agent;
-import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpClient.Version;
 import java.net.http.HttpRequest;
@@ -51,7 +46,6 @@ public class Https {
 
     }
 
-    // Java 11
     public static HttpResponse<String> getResponse(String address) throws IOException, InterruptedException {
         HttpClient httpClient = HttpClient.newBuilder()
                 .version(Version.HTTP_2)
@@ -64,14 +58,4 @@ public class Https {
         return mainResponse;
     }
 
-    // Java 6
-	public static String retrieve(String address) throws IOException {
-		String charset = "UTF-8";
-
-	    URL url = new URL(address);
-	    URLConnection hc = url.openConnection();
-        hc.setRequestProperty("User-Agent", Agent.get());
-	    Reader reader = new InputStreamReader(hc.getInputStream(), charset);
-	    return IOUtils.toString(reader);
-	}
 }
